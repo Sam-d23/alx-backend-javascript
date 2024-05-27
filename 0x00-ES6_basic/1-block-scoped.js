@@ -10,5 +10,5 @@ export default function taskBlock(trueOrFalse) {
     newTask2 = false;
   }
 
-  return [task, task2];
+  return [newTask, newTask2];
 }
