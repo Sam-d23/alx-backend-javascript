@@ -1,9 +1,9 @@
-import Currency from './3-currency.js';
+import Currency from './3-currency';
 
 export default class Pricing {
   constructor(amount, currency) {
-    this.amount = amount;  // This will trigger the setter
-    this.currency = currency;  // This will trigger the setter
+    this.amount = amount;
+    this.currency = currency;
   }
 
   get amount() {
@@ -12,7 +12,7 @@ export default class Pricing {
 
   set amount(value) {
     if (typeof value !== 'number') {
-      throw new TypeError('amount must be a number');
+      throw new TypeError('amount should be a number');
     }
     this._amount = value;
   }
@@ -23,7 +23,7 @@ export default class Pricing {
 
   set currency(value) {
     if (!(value instanceof Currency)) {
-      throw new TypeError('currency must be an instance of Currency');
+      throw new TypeError('currency has to be a Currency');
     }
     this._currency = value;
   }
@@ -34,7 +34,7 @@ export default class Pricing {
 
   static convertPrice(amount, conversionRate) {
     if (typeof amount !== 'number') {
-      throw new TypeError('amount must be a number');
+      throw new TypeError('amount should be a number');
     }
     if (typeof conversionRate !== 'number') {
       throw new TypeError('conversionRate must be a number');
