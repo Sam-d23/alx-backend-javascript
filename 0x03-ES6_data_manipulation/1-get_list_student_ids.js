@@ -1,8 +1,9 @@
-import getListStudents from "./0-get_list_students.js";
-
-export default function getListStudentsIds(students) {
-  if (!Array.isArray(students)) {
-    return [];
+export default function getListStudentIds(students) {
+  // Check if the input is an array
+  if (students instanceof Array) {
+    // Use map to extract and return the ids from the student objects
+    return students.map(student => student.id);
   }
-  return students.map(student => student.id);
+  // Return an empty array if the input is not an array
+  return [];
 }
