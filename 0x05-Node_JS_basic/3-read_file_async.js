@@ -1,51 +1,42 @@
-const fs = require('fs');
+const { readFile } = require('fs');
 
-/**
- * Count students and log details about them asynchronously.
- * @param {string} filePath - The path to the CSV file.
- * @returns {Promise<void>}
- */
-const countStudents = (filePath) => {
+function countStudents(fileName) {
+  const students = {};
+  const fields = {};
+  let length = 0;
   return new Promise((resolve, reject) => {
-    fs.readFile(filePath, 'utf-8', (err, data) => {
-      if (err) {
-        reject(new Error('Cannot load the database'));
-        return;
-      }
-
-      const students = {};
-      const fields = {};
-      const lines = data.split('\n').filter(line => line.trim() !== '');
-
-      let length = lines.length - 1; // Exclude the header line
-
-      for (let i = 1; i < lines.length; i += 1) {
-        const line = lines[i];
-        const [firstname, , , field] = line.split(',');
-        
-        if (!field) {
-          length -= 1; // Exclude invalid lines
-          continue;
+    readFile(fileName, (error, data) => {
+      if (error) {
+        reject(Error('Cannot load the database'));
+      } else {
+        const lines = data.toString().split('\n');
+        for (let j = 0; j < lines.length; j += 1) {
+          if (lines[j]) {
+            length += 1;
+            const field = lines[j].toString().split(',');
+            if (Object.prototype.hasOwnProperty.call(students, field[3])) {
+              students[field[3]].push(field[0]);
+            } else {
+              students[field[3]] = [field[0]];
+            }
+            if (Object.prototype.hasOwnProperty.call(fields, field[3])) {
+              fields[field[3]] += 1;
+            } else {
+              fields[field[3]] = 1;
+            }
+          }
         }
-
-        if (students[field]) {
-          students[field].push(firstname);
-        } else {
-          students[field] = [firstname];
+        const l = length - 1;
+        console.log(`Number of students: ${l}`);
+        for (const [key, value] of Object.entries(fields)) {
+          if (key !== 'field') {
+            console.log(`Number of students in ${key}: ${value}. List: ${students[key].join(', ')}`);
+          }
         }
-
-        fields[field] = (fields[field] || 0) + 1;
+        resolve(data);
       }
-
-      console.log(`Number of students: ${length}`);
-      for (const [field, count] of Object.entries(fields)) {
-        const list = students[field].join(', ');
-        console.log(`Number of students in ${field}: ${count}. List: ${list}`);
-      }
-
-      resolve();
     });
   });
-};
+}
 
 module.exports = countStudents;
