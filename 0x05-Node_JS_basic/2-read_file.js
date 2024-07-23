@@ -1,27 +1,35 @@
 const fs = require('fs');
 
-function countStudents(fileName) {
+/**
+ * Count students and log details about them.
+ * @param {string} filePath - The path to the CSV file.
+ */
+function countStudents(filePath) {
+  const studentRecords = {};
+  const categoryCounts = {};
+  let totalLines = 0;
+
   try {
-    const fileContents = fs.readFileSync(fileName, 'utf8').trim();
-    const lines = fileContents.split('\n').filter(Boolean);
+    const fileData = fs.readFileSync(filePath, 'utf8').trim();
+    const linesArray = fileData.split('\n').filter(Boolean);
 
-    const students = {};
-    const fields = {};
-
-    lines.forEach((line, index) => {
+    linesArray.forEach((line, index) => {
       if (index === 0) return; // Skip header line
-      const [firstName, , , field] = line.split(',');
 
-      if (!students[field]) students[field] = [];
-      students[field].push(firstName);
+      const [name, , , category] = line.split(',');
 
-      fields[field] = (fields[field] || 0) + 1;
+      if (!studentRecords[category]) {
+        studentRecords[category] = [];
+      }
+      studentRecords[category].push(name);
+
+      categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+      totalLines += 1;
     });
 
-    console.log(`Number of students: ${lines.length - 1}`);
-    Object.entries(fields).forEach(([field, count]) => {
-      console.log(`Number of students in ${field}:
-	      ${count}. List: ${students[field].join(', ')}`);
+    console.log(`Number of students: ${totalLines}`);
+    Object.entries(categoryCounts).forEach(([category, count]) => {
+      console.log(`Number of students in ${category}: ${count}. List: ${studentRecords[category].join(', ')}`);
     });
 
   } catch {
