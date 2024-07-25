@@ -46,9 +46,9 @@ describe("Available_payments page", function() {
     it("check correct status for correct url", function() {
 	request.get("http://localhost:7865/available_payments", (error, response, body) => {
 	    if (error) {
-		expect(res.statusCode).to.not.equal(200);
+		expect(response.statusCode).to.not.equal(200);
 	    } else {
-		expect(res.statusCode).to.equal(200);
+		expect(response.statusCode).to.equal(200);
 	    }
 	});
     });
@@ -110,7 +110,7 @@ describe("Login", function() {
 	    }
 	};
 	request.post(op, function(error, response, body) {
-	    expect(res.statusCode).to.equal(404);
+	    expect(response.statusCode).to.equal(404);
 	    done();
 	});
     });
